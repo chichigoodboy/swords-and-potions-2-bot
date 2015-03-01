@@ -12,6 +12,7 @@ import time
 
 # Define variable
 MAXLOOP = 3
+MAXRESTTIMES = 4
 def signal_handler(signum, frame):
 	print "Now exiting..."
 	exit()
@@ -46,7 +47,7 @@ always_click = [
 	"buttons/next.png",
 	"customer-interactions/refuse.png",
 	"customer-interactions/sorry.png",
-	"customer-interactions/ok.png" # needed for adventures
+	"customer-interactions/ok.png"  # needed for adventures
 
 ]
 # Array of customers and their interactions
@@ -87,7 +88,7 @@ def clickImage(img, similarity=0.75):  # can not go higher than 0.8 due to close
 	if img in sleep_for:
 		sleepy = 1
 		
-	#is_suggestion = img == suggest
+	# is_suggestion = img == suggest
 	
 	# Convert to an image
 	found = True
@@ -114,7 +115,7 @@ def clickImage(img, similarity=0.75):  # can not go higher than 0.8 due to close
 			 	writeLog("sleep " + str(sleepy))
 				time.sleep(sleepy)
 		except Exception as e:
-			#writeLog(e)
+			# writeLog(e)
 			print(e)
 			writeLog("couldn't click it")
 			found = False
@@ -149,22 +150,7 @@ def employeeInteraction(loop=True):
 			# 	if not loop:
 			# 		return found
 			# 	continue # Move on to the next employee
-				
-			# Otherwise attempt to build a random item
-			# targets = find_all(Image("lvl-target.png"))
-			# random.shuffle(targets)
-			# while len(targets):
-			# 	target = targets.pop()
-			# 	if target.y > 600: 
-			# 		continue # Don't count level targets that are too low
-			# 	print "attempting to build " + str(target)
-			# 	if clickImage(target):
-			# 		if wasSuccessful():
-			# 			found = True
-			# 			if not loop:
-			# 				return found
-			# 			break
-				
+			
 			# Time to give up
 			clickImage("buttons/closeitemselect.png")
 			clickImage("buttons/closeresource.png")
@@ -228,14 +214,18 @@ def suggestSomething():
 				return True
 
 def sellSuggestionItemsToCustomer(img):
-	writeLog("sell items to customer")
-	clickImage(img)
-	if Image("customer-interactions/sell.png").exists():
-		writeLog("sell an item to customer "+ str(img) ) 
-		clickImage(Image("customer-interactions/sell.png"), 0.8)
-	else:
-		writeLog("want to sell item to customer but out of item " + str(img)) 
-		clickImage(Image("customer-interactions/refuse.png"), 0.8)
+	writeLog("check customer interesting..." + str(img))
+	found = False
+	if clickImage(img):
+		writeLog("found customer")
+		found = True
+		if Image("customer-interactions/sell.png").exists():
+			writeLog("sell an item to customer " + str(img)) 
+			clickImage(Image("customer-interactions/sell.png"), 0.8)
+		else:
+			writeLog("want to sell item to customer but out of item " + str(img)) 
+			clickImage(Image("customer-interactions/refuse.png"), 0.8)
+	return found
 def openStore():
 	if Image("buttons/start.png").exists():
 		clickImage(Image("buttons/start.png"))
@@ -244,16 +234,17 @@ def openStore():
 # Main script execution
 
 def writeLog(str):	
-	with open("Log.txt","a") as f:
+	with open("Log.txt", "a") as f:
 		t = time.time()
 		f.write(datetime.datetime.fromtimestamp(t).strftime('%m-%d %H:%M:%S'))
 		f.write(" " + str)
 		f.write('\n')
 		print str
 	
-#print now time
-#writeLog(datetime.datetime.now())
+# print now time
+# writeLog(datetime.datetime.now())
 
+restTime=0
 while True:
 
 	writeLog("check open store")
@@ -268,18 +259,29 @@ while True:
 	while (not Image("summary.png").exists()):
 		loop = loop + 1
 		employeeInteraction(loop=False)  # Check for an employee again
+
+		# sell items in the list to customer
+		for img in suggestionItem:
+			sellSuggestionItemsToCustomer(img)
 		if loop > MAXLOOP:
 			break
 	
 	# Check for other buttons and such only if nothing else matched
 	for img in always_click:
+		img = Image(img, 0.8)
 		clickImage(img)
 	
-	# sell items in the list to customer
-	for img in suggestionItem:
-		sellSuggestionItemsToCustomer(img)
+	
+	
 
 	while clickImage("buttons/done.png"):
 		pass
 	
+	if restTime > 4:
+		writeLog("Sleeping...")
+		time.sleep(30)
+		restTime = 0
+	else:
+		restTime+=1
+		
 	writeLog("Garbage collected " + str(gc.collect()) + " objects")
