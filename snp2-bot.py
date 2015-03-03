@@ -49,7 +49,6 @@ always_click = [
 	"customer-interactions/sorry.png",
 	"customer-interactions/ok.png",
 	"buttons/closewhencraging.png"  # needed for adventures
-
 ]
 # Array of customers and their interactions
 customers = glob.glob("customers/*.png")
@@ -78,6 +77,8 @@ cycle_path = "build-cycles/"
 build_cycle_indexes = {x:-1 for x in os.listdir(cycle_path) if os.path.isdir(os.path.join(cycle_path, x))}
 build_cycle_items = {}
 for k in build_cycle_indexes.keys():
+	print "k is " + str(k)
+	print "build_cycle_items[k] is " + os.path.join(cycle_path, k, "*.png")
 	build_cycle_items[k] = glob.glob(os.path.join(cycle_path, k, "*.png"))
 
 
@@ -107,6 +108,7 @@ def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close
 		try:
 
 			# Click it
+			print "click"
 			click(img)
 			# Handle customer suggestions
 			# if is_suggestion:
@@ -214,6 +216,7 @@ def suggestSomething():
 			if not clickImage("buttons/small-ok.png"):
 				return True
 
+
 def sellSuggestionItemsToCustomer(img):
 	writeLog("check customer interesting..." + str(img))
 	found = False
@@ -227,6 +230,7 @@ def sellSuggestionItemsToCustomer(img):
 			writeLog("want to sell item to customer but out of item " + str(img)) 
 			clickImage(Image("customer-interactions/refuse.png"), 0.8)
 	return found
+
 def openStore():
 	if Image("buttons/start.png").exists():
 		clickImage(Image("buttons/start.png"))
@@ -251,7 +255,11 @@ while True:
 	writeLog("check open store")
 	openStore()
 	
+	print "check open sytore"
+	openStore()
+	
 	# Keep clicking on employees when available
+	print("employeeInteraction")
 	employeeInteraction(loop=True)
 	
 	# Keep clicking on customers when available
