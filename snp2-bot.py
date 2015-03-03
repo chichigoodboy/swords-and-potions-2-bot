@@ -47,7 +47,8 @@ always_click = [
 	"buttons/next.png",
 	"customer-interactions/refuse.png",
 	"customer-interactions/sorry.png",
-	"customer-interactions/ok.png"  # needed for adventures
+	"customer-interactions/ok.png",
+	"buttons/closewhencraging.png"  # needed for adventures
 
 ]
 # Array of customers and their interactions
@@ -261,8 +262,7 @@ while True:
 		employeeInteraction(loop=False)  # Check for an employee again
 
 		# sell items in the list to customer
-		for img in suggestionItem:
-			sellSuggestionItemsToCustomer(img)
+		
 		if loop > MAXLOOP:
 			break
 	
@@ -271,7 +271,8 @@ while True:
 		img = Image(img, 0.8)
 		clickImage(img)
 	
-	
+	for img in suggestionItem:
+		sellSuggestionItemsToCustomer(img)
 	
 
 	while clickImage("buttons/done.png"):
