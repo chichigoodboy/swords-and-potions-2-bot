@@ -81,7 +81,7 @@ for k in build_cycle_indexes.keys():
 
 
 # Returns whether the given image was clicked 
-def clickImage(img, similarity=0.75):  # can not go higher than 0.8 due to close item select button
+def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close item select button
 	writeLog("clickImage " + str(img))
 	# Determine if we're going to sleep after click
 	sleepy = 0
@@ -277,11 +277,11 @@ while True:
 	while clickImage("buttons/done.png"):
 		pass
 	
-	if restTime > 4:
-		writeLog("Sleeping...")
-		time.sleep(30)
-		restTime = 0
-	else:
-		restTime+=1
+	#if restTime > 4:
+	#	writeLog("Sleeping...")
+	#	time.sleep(30)
+	#	restTime = 0
+	#else:
+	#	restTime+=1
 		
 	writeLog("Garbage collected " + str(gc.collect()) + " objects")
