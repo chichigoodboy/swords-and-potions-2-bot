@@ -48,7 +48,9 @@ always_click = [
         "customer-interactions/refuse.png",
         "customer-interactions/sorry.png",
         "customer-interactions/ok.png",
-        "buttons/closewhencraging.png"  # needed for adventures
+        "buttons/closewhencraging.png",  # needed for adventures
+        "buttons/citylevel.png",
+        "buttons/klash.png"
 ]
 # Array of customers and their interactions
 customers = glob.glob("customers/*.png")
@@ -77,7 +79,7 @@ for k in build_cycle_indexes.keys():
 
 # Returns whether the given image was clicked 
 def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close item select button
-        writeLog("clickImage " + str(img))
+        #writeLog("clickImage " + str(img))
         # Determine if we're going to sleep after click
         sleepy = 0
         if img in sleep_for:
@@ -87,20 +89,20 @@ def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close
         
         # Convert to an image
         found = True
-        if img == str(img):
+        if img == str(
+                      img):
                 if img == "buttons/next.png":
                         similarity = 0.5
                 img = Image(img, similarity)
                 found = img.exists()
                 
         # Search for the image
-        writeLog("check for image " + str(img))
+        #writeLog("check for image " + str(img))
         if found:
                 writeLog("found image " + str(img))
                 try:
 
                         # Click it
-                        print "click"
                         click(img)
                         # Handle customer suggestions
                         # if is_suggestion:
@@ -128,21 +130,21 @@ def employeeInteraction(loop=True):
         found = False
         random.shuffle(employees)
         for img in employees:
-                writeLog("check " + str(img))
+                #writeLog("check " + str(img))
                 if clickImage(img):
                         
-                        if not Image("employee-interactions/empty-queue.png", 0.75).exists():
-                                # This employee is already building something
-                                writeLog("queue is not empty")
-                                clickImage("buttons/closeitemselect.png")
-                                continue
+                    if not Image("employee-interactions/empty-queue.png", 0.75).exists():
+                            # This employee is already building something
+                            writeLog("queue is not empty")
+                            clickImage("buttons/closeitemselect.png")
+                            continue
                         
-                        # Attempt to use a build cycle for that employee+
-                        employee = os.path.basename(img).split(".")[0]
-                        employeeBuildCycle(employee)
+                    # Attempt to use a build cycle for that employee+
+                    employee = os.path.basename(img).split(".")[0]
+                    employeeBuildCycle(employee)
                         
-                        clickImage("buttons/closeitemselect.png")
-                        clickImage("buttons/closeresource.png")
+                    #clickImage("buttons/closeitemselect.png")   
+                    #clickImage("buttons/closeresource.png")
                         
         return found
 
@@ -229,36 +231,37 @@ def writeLog(str):
 
 restTime = 0
 while True:
-
         writeLog("check open store")
         openStore()
         
-        print "check open sytore"
-        openStore()
-        
         # Keep clicking on employees when available
-        print("employeeInteraction")
-        employeeInteraction(loop=True)
+        # print("employeeInteraction")
+        # employeeInteraction(loop=True)
         
         # Keep clicking on customers when available
         loop = 0
-        # while (not Image("summary.png").exists()) and customerInteraction():
-        while (not Image("summary.png").exists() & loop < MAXLOOP):
-                loop = loop + 1
-        
-        for img in suggestionItem:
-                sellSuggestionItemsToCustomer(img)
-                
-        # Check for other buttons and such only if nothing else matched
-        for img in always_click:
-                img = Image(img, 0.8)
-                clickImage(img)
-        
-        
-        
-
+        #print (not Image("summary.png").exists())
+        #print loop < MAXLOOP
+        #print (not Image("summary.png").exists()) & loop < MAXLOOP
+        #print False & True
+        while (loop < MAXLOOP):
+            loop = loop + 1
+            employeeInteraction(loop=True)
+            for img in suggestionItem:
+                    sellSuggestionItemsToCustomer(img)
+            if Image("summary.png").exists():
+                break;
+            if Image("customers/buy.png").exists():
+                clickImage("customers/buy.png", 0.8)
+                clickImage("customer-interactions/buy.png", 0.8)
+            if loop == 2:
+                 # Check for other buttons and such only if nothing else matched
+                for img in always_click:
+                    img = Image(img, 0.8)
+                    clickImage(img)
         while clickImage("buttons/done.png"):
-                pass
-        
-                
+            clickImage("buttons/done.png", 0.8)
+            pass
+        if Image("buttons/next.png").exists():
+            clickImage("buttons/next.png", 0.8)
         writeLog("Garbage collected " + str(gc.collect()) + " objects")
