@@ -79,6 +79,7 @@ for k in build_cycle_indexes.keys():
 
 # Returns whether the given image was clicked 
 def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close item select button
+        #writeLog("clickImage " + str(img))
         # Determine if we're going to sleep after click
         sleepy = 0
         if img in sleep_for:
@@ -235,6 +236,10 @@ while True:
         
         # Keep clicking on customers when available
         loop = 0
+        #print (not Image("summary.png").exists())
+        #print loop < MAXLOOP
+        #print (not Image("summary.png").exists()) & loop < MAXLOOP
+        #print False & True
         while (loop < MAXLOOP):
             loop = loop + 1
             employeeInteraction(loop=True)
