@@ -83,7 +83,7 @@ def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close
         # Determine if we're going to sleep after click
         sleepy = 0
         if img in sleep_for:
-            sleepy = 1
+            sleepy = 2
                 
         # is_suggestion = img == suggest
         
@@ -204,6 +204,9 @@ def sellSuggestionItemsToCustomer(img):
                         clickImage(Image("customer-interactions/sell.png"), 0.8)
                 else:
                         writeLog("want to sell item to customer but out of item " + str(img)) 
+                        suggestionItem.remove(img)
+                        os.remove(img)
+                        #os.rename(str(img), str(img))
                         clickImage(Image("customer-interactions/refuse.png"), 0.8)
         return found
 
