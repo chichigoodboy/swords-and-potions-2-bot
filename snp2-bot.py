@@ -83,7 +83,7 @@ def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close
         # Determine if we're going to sleep after click
         sleepy = 0
         if img in sleep_for:
-            sleepy = 1
+            sleepy = 2
                 
         # is_suggestion = img == suggest
         
@@ -153,6 +153,8 @@ def employeeBuildCycle(employee):
             item = build_cycle_items[employee][itemIndex]
             clickImage(item)
             if wasSuccessful():
+                #if renamePng(str(item), '_', '.'):
+                #    build_cycle_items[employee].remove(item)
                 break
             itemIndex += 1
 
@@ -204,6 +206,9 @@ def sellSuggestionItemsToCustomer(img):
                         clickImage(Image("customer-interactions/sell.png"), 0.8)
                 else:
                         writeLog("want to sell item to customer but out of item " + str(img)) 
+                        suggestionItem.remove(img)
+                        os.remove(img)
+                        #os.rename(str(img), str(img))
                         clickImage(Image("customer-interactions/refuse.png"), 0.8)
         return found
 
@@ -221,7 +226,27 @@ def writeLog(str):
                 f.write(" " + str)
                 f.write('\n')
                 print str
-        
+
+def renamePng( path, first, last):
+    try:
+        start = path.index( first ) + len( first )
+        end = path.index( last, start )
+        num = path[start:end]
+        if int(num) == 1:
+            writeLog("delete the item from build-cycle" + str(path)) 
+            os.remove(path)
+            return True
+        elif int(num) > 1:
+            newNum = int(num) - 1
+            newPath = path[0:start] + str(newNum) + path[end:len(path)]
+            os.rename(path, newPath)
+            writeLog("rename the item to" + newPath)
+            return  True
+        #nothing will be happened if number is 0
+        return False
+    except ValueError:
+        return ""
+            
 # print now time
 # writeLog(datetime.datetime.now())
 
