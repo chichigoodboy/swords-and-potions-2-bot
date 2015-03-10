@@ -9,6 +9,10 @@ from Tkinter import Image
 from __builtin__ import str
 import datetime
 import time
+import string
+import random
+from _ctypes import Array
+from array import array
 
 # Define variable
 MAXLOOP = 3
@@ -154,7 +158,8 @@ def employeeBuildCycle(employee):
             clickImage(item)
             if wasSuccessful():
                 #if renamePng(str(item), '_', '.'):
-                #    build_cycle_items[employee].remove(item)
+                #    print "remove build_cycle_items"
+                #    array.remove(build_cycle_items[employee][itemIndex])
                 break
             itemIndex += 1
 
@@ -227,22 +232,31 @@ def writeLog(str):
                 f.write('\n')
                 print str
 
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
 def renamePng( path, first, last):
     try:
         start = path.index( first ) + len( first )
         end = path.index( last, start )
         num = path[start:end]
-        if int(num) == 1:
-            writeLog("delete the item from build-cycle" + str(path)) 
-            os.remove(path)
+        if int(num) == 1: 
+            s = path.index('\\')
+            e = path.index('.png',start)
+            print path[0:s]
+            print path[e:len(path)]
+            newPath = path[0:s] + '/undo/' + id_generator(5, 'abcdefghijklmnopqrstuuvwxyz') +path[e:len(path)] 
+            os.rename(path, newPath)
+            print "return =1 true"
             return True
         elif int(num) > 1:
             newNum = int(num) - 1
             newPath = path[0:start] + str(newNum) + path[end:len(path)]
             os.rename(path, newPath)
-            writeLog("rename the item to" + newPath)
-            return  True
+            print "return false"
+            return  False
         #nothing will be happened if number is 0
+        print "return false"
         return False
     except ValueError:
         return ""
