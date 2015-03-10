@@ -157,9 +157,8 @@ def employeeBuildCycle(employee):
             item = build_cycle_items[employee][itemIndex]
             clickImage(item)
             if wasSuccessful():
-                #if renamePng(str(item), '_', '.'):
-                #    print "remove build_cycle_items"
-                #    array.remove(build_cycle_items[employee][itemIndex])
+                renamePng(str(item), '_', '.')
+                build_cycle_items[employee] = glob.glob(os.path.join(cycle_path, employee, "*.png"))
                 break
             itemIndex += 1
 
@@ -247,13 +246,11 @@ def renamePng( path, first, last):
             print path[e:len(path)]
             newPath = path[0:s] + '/undo/' + id_generator(5, 'abcdefghijklmnopqrstuuvwxyz') +path[e:len(path)] 
             os.rename(path, newPath)
-            print "return =1 true"
             return True
         elif int(num) > 1:
             newNum = int(num) - 1
             newPath = path[0:start] + str(newNum) + path[end:len(path)]
             os.rename(path, newPath)
-            print "return false"
             return  False
         #nothing will be happened if number is 0
         print "return false"
