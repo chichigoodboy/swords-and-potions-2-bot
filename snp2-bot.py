@@ -38,6 +38,7 @@ employees = glob.glob("employees/*.png")
 
 # Array of things that should always be clicked
 always_click = [        
+        "buttons/done.png",
         "customers/buy.png",
         "customer-interactions/buy.png",
         "buttons/start.png",
@@ -292,8 +293,7 @@ while True:
                     img = Image(img, 0.8)
                     clickImage(img)
         while clickImage("buttons/done.png"):
-            clickImage("buttons/done.png", 0.8)
-            pass
+            continue
         if Image("buttons/next.png").exists():
             clickImage("buttons/next.png", 0.8)
         writeLog("Garbage collected " + str(gc.collect()) + " objects")
