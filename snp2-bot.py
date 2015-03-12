@@ -55,7 +55,10 @@ always_click = [
         "customer-interactions/ok.png",
         "buttons/closewhencraging.png",  # needed for adventures
         "buttons/citylevel.png",
-        "buttons/klash.png"
+        "buttons/klash.png",
+        "buttons/finishingwhencraft.png",
+        "buttons/compomentMissing.png",
+        "buttons/selectcraft.png"
 ]
 # Array of customers and their interactions
 customers = glob.glob("customers/*.png")
@@ -102,6 +105,7 @@ def clickImage(img, similarity=0.85):  # can not go higher than 0.8 due to close
                 
         # Search for the image
         #writeLog("check for image " + str(img))
+        print "check image " + str(img)
         if found:
                 writeLog("found image " + str(img))
                 try:
@@ -144,6 +148,7 @@ def employeeInteraction(loop=True):
                         
                     # Attempt to use a build cycle for that employee+
                     employee = os.path.basename(img).split(".")[0]
+                    print "employee is " + str(employee)
                     employeeBuildCycle(employee)
                         
                     clickImage("buttons/closeitemselect.png")   
@@ -156,6 +161,7 @@ def employeeBuildCycle(employee):
         itemIndex = 0
         while itemIndex < len(build_cycle_items[employee]): 
             item = build_cycle_items[employee][itemIndex]
+            print "item: "+ str(item)
             clickImage(item)
             if wasSuccessful():
                 renamePng(str(item), '_', '.')
