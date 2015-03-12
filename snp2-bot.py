@@ -159,7 +159,8 @@ def employeeInteraction(loop=True):
 # Attempts to execute the build cycle for the given employee
 def employeeBuildCycle(employee):
         itemIndex = 0
-        while itemIndex < len(build_cycle_items[employee]): 
+        while itemIndex < len(build_cycle_items[employee]):
+            print len(build_cycle_items[employee])
             item = build_cycle_items[employee][itemIndex]
             print "item: "+ str(item)
             clickImage(item)
