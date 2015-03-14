@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 import gc
 import glob
 import os
@@ -269,38 +270,52 @@ def renamePng( path, first, last):
 # print now time
 # writeLog(datetime.datetime.now())
 
+def removeTeamViewer():
+    try:
+        msg = u'贊助工作階段'
+        switch_to(msg)
+        if Image("teamviewer/check.png").exists():
+            writeLog("remove teamviewer")
+            clickImage("teamviewer/check.png", 0.8)
+        switch_to('Edgebee')
+    except LookupError:
+        return ""
+
 restTime = 0
 while True:
-        writeLog("check open store")
-        openStore()
+    removeTeamViewer()
+    writeLog("check open store")
+    openStore()
         
-        # Keep clicking on employees when available
-        # print("employeeInteraction")
-        # employeeInteraction(loop=True)
+    # Keep clicking on employees when available
+    # print("employeeInteraction")
+    # employeeInteraction(loop=True)
         
-        # Keep clicking on customers when available
-        loop = 0
-        #print (not Image("summary.png").exists())
-        #print loop < MAXLOOP
-        #print (not Image("summary.png").exists()) & loop < MAXLOOP
-        #print False & True
-        while (loop < MAXLOOP):
-            loop = loop + 1
-            employeeInteraction(loop=True)
-            for img in suggestionItem:
-                    sellSuggestionItemsToCustomer(img)
-            if Image("summary.png").exists():
-                break;
-            if Image("customers/buy.png").exists():
-                clickImage("customers/buy.png", 0.8)
-                clickImage("customer-interactions/buy.png", 0.8)
-            if loop == 2:
-                 # Check for other buttons and such only if nothing else matched
-                for img in always_click:
-                    img = Image(img, 0.8)
-                    clickImage(img)
-        while clickImage("buttons/done.png"):
-            continue
-        if Image("buttons/next.png").exists():
-            clickImage("buttons/next.png", 0.8)
-        writeLog("Garbage collected " + str(gc.collect()) + " objects")
+    # Keep clicking on customers when available
+    loop = 0
+    #print (not Image("summary.png").exists())
+    #print loop < MAXLOOP
+    #print (not Image("summary.png").exists()) & loop < MAXLOOP
+    #print False & True
+    while (loop < MAXLOOP):
+        loop = loop + 1
+        employeeInteraction(loop=True)
+        for img in suggestionItem:
+                sellSuggestionItemsToCustomer(img)
+        if Image("summary.png").exists():
+            break;
+        if Image("customers/buy.png").exists():
+            clickImage("customers/buy.png", 0.8)
+            clickImage("customer-interactions/buy.png", 0.8)
+        if loop == 2:
+             # Check for other buttons and such only if nothing else matched
+            for img in always_click:
+                img = Image(img, 0.8)
+                clickImage(img)
+    while clickImage("buttons/done.png"):
+        continue
+    if Image("buttons/next.png").exists():
+        clickImage("buttons/next.png", 0.8)
+    writeLog("Garbage collected " + str(gc.collect()) + " objects")
+    
+    
