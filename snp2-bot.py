@@ -313,6 +313,7 @@ while True:
                 img = Image(img, 0.8)
                 clickImage(img)
     while clickImage("buttons/done.png"):
+        time.sleep(1)
         continue
     if Image("buttons/next.png").exists():
         clickImage("buttons/next.png", 0.8)
