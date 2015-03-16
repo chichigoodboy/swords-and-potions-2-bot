@@ -227,7 +227,7 @@ def sellSuggestionItemsToCustomer(img):
 
 def openStore():
         if Image("buttons/start.png").exists():
-                clickImage(Image("buttons/start.png"))
+            clickImage(Image("buttons/start.png"))
         return
                 
 # Main script execution
