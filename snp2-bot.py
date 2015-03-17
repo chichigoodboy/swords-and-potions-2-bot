@@ -165,6 +165,7 @@ def employeeBuildCycle(employee):
             item = build_cycle_items[employee][itemIndex]
             print "item: "+ str(item)
             clickImage(item)
+            time.sleep(1)
             if wasSuccessful():
                 renamePng(str(item), '_', '.')
                 build_cycle_items[employee] = glob.glob(os.path.join(cycle_path, employee, "*.png"))
